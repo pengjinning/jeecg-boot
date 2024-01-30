@@ -26,13 +26,10 @@ export const columns: BasicColumn[] = [
     dataIndex: '${po.fieldName}String'
     <#elseif po.classType=='umeditor'>
     dataIndex: '${po.fieldName}',
-    slots: { customRender: 'htmlSlot' },
     <#elseif po.classType=='pca'>
     dataIndex: '${po.fieldName}',
-    slots: { customRender: 'pcaSlot' },
    <#elseif po.classType=='file'>
     dataIndex: '${po.fieldName}',
-    slots: { customRender: 'fileSlot' },
    <#elseif po.classType=='image'>
     dataIndex: '${po.fieldName}',
     customRender:render.renderImage,
@@ -160,7 +157,7 @@ export const searchFormSchema: FormSchema[] = [
 <#else>
       component: 'Input',
 </#if>
-      colProps: {span: 6},
+      //colProps: {span: 6},
      },
 <#else>
      {
@@ -187,7 +184,7 @@ export const searchFormSchema: FormSchema[] = [
 <#else>
       component: 'Input', //TODO 范围查询
 </#if>
-      colProps: {span: 6},
+      //colProps: {span: 6},
 	},
 </#if>
 </#if>
@@ -276,11 +273,18 @@ export const formSchema: FormSchema[] = [
     componentProps:{
         dictCode:"${form_field_dictCode}"
      },
-    <#elseif po.classType=='list_multi' || po.classType=='checkbox'>
+     <#-- update-begin---author:chenrui ---date:20231228  for：[QQYUN-7583] Vue3风格表单页面多选控件渲染成了下拉多选---------- -->
+    <#elseif po.classType=='list_multi'>
     component: 'JSelectMultiple',
     componentProps:{
         dictCode:"${form_field_dictCode}"
      },
+    <#elseif po.classType=='checkbox'>
+    component: 'JCheckbox',
+    componentProps:{
+        dictCode:"${form_field_dictCode}"
+     },
+     <#-- update-end---author:chenrui ---date:20231228  for：[QQYUN-7583] Vue3风格表单页面多选控件渲染成了下拉多选---------- -->
     <#elseif po.classType=='sel_search'>
     component: 'JSearchSelect',
     componentProps:{
@@ -407,6 +411,17 @@ export const formSchema: FormSchema[] = [
 	},
 </#if>
 ];
+
+<#-- update-begin---author:chenrui ---date:20231228  for：[QQYUN-7527]vue3代码生成默认带上高级查询---------- -->
+// 高级查询数据
+export const superQuerySchema = {
+  <#list columns as po>
+  <#if po.isShowList =='Y' && po.fieldName !='id'>
+  ${superQueryFieldListForVue3(po,po_index)},
+  </#if>
+  </#list>
+};
+<#-- update-end---author:chenrui ---date:20231228  for：[QQYUN-7527]vue3代码生成默认带上高级查询---------- -->
 
 
 /**
